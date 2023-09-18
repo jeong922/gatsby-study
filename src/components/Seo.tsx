@@ -1,3 +1,4 @@
+import { graphql, useStaticQuery } from 'gatsby';
 import React from 'react';
 
 type Props = {
@@ -5,5 +6,19 @@ type Props = {
 };
 
 export default function Seo({ title }: Props) {
-  return <title>{title}</title>;
+  const data = useStaticQuery<Queries.SeoDataQuery>(graphql`
+    query SeoData {
+      site {
+        siteMetadata {
+          title
+        }
+      }
+    }
+  `);
+
+  return (
+    <title>
+      {data.site?.siteMetadata?.title} | {title}
+    </title>
+  );
 }

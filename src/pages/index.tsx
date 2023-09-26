@@ -1,18 +1,43 @@
 import * as React from 'react';
 import Layout from '../components/Layout';
 import Seo from '../components/Seo';
-import { StaticImage } from 'gatsby-plugin-image';
+import { GatsbyImage, StaticImage, getImage } from 'gatsby-plugin-image';
+import { graphql, PageProps, Link } from 'gatsby';
 
-export default function IndexPage() {
+export default function IndexPage({ data }: PageProps<Queries.StickersQuery>) {
   return (
     <Layout title='Welcome to DevStickers ❤'>
-      <StaticImage
-        height={500}
-        src='https://images.unsplash.com/photo-1531306728370-e2ebd9d7bb99?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1587&q=80'
-        alt='image'
-      />
+      <div className='grid'>
+        {data.allContentfulStickerPack.nodes.map((sticker) => (
+          <article key={sticker.name}>
+            <GatsbyImage
+              image={getImage(sticker.preview?.gatsbyImageData!)!}
+              alt={sticker.name!}
+            />
+            <Link to={`/products/${sticker.id}`}>
+              <h2>{sticker.name}</h2>
+              <h3>{sticker.price}</h3>
+            </Link>
+          </article>
+        ))}
+      </div>
     </Layout>
   );
 }
+
+export const query = graphql`
+  query Stickers {
+    allContentfulStickerPack {
+      nodes {
+        id
+        name
+        price
+        preview {
+          gatsbyImageData(placeholder: BLURRED, height: 250)
+        }
+      }
+    }
+  }
+`;
 
 export const Head = () => <Seo title='Home' />;

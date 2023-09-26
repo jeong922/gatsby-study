@@ -3,7 +3,7 @@ import React from 'react';
 
 type Props = {
   children: React.ReactNode;
-  title: string;
+  title?: string;
 };
 
 const nav = [
@@ -12,9 +12,9 @@ const nav = [
   { title: 'Blog', path: '/blog' },
 ];
 
-export default function Layout({ children, title }: Props) {
+export default function Layout({ children, title = '' }: Props) {
   return (
-    <div>
+    <div className='container'>
       <nav>
         <ul>
           {nav.map((item) => (
